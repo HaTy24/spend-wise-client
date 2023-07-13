@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { DebounceInput } from "@/packages/components/form/DebounceInput";
 import { transactionService } from "@/packages/services/TransactionService";
+import { Transaction } from "@/packages/models/Transaction";
 
 export default function Home() {
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [amount, setAmount] = useState<number>(0);
   const [spendingReason, setSpendingReason] = useState<string>("");
 
   const getTransactions = async () => {
-    const data = await transactionService.getTransactions();
-    setTransactions(data.transaction);
+    const data = await transactionService.getTransactions({
+      take: 5,
+      skip: 0,
+      sort: "date",
+    });
   };
   useEffect(() => {
     getTransactions();
@@ -62,7 +66,7 @@ export default function Home() {
           <ul key={index}>
             <li>{transaction.amount}</li>
             <li>{transaction.purpose}</li>
-            <li>{transaction.date}</li>
+            <li>{transaction.date as unknown as ReactNode}</li>
           </ul>
         ))}
       </div>
