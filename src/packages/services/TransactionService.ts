@@ -22,7 +22,7 @@ class TransactionService {
               id
               amount
               date
-              purpose
+              spendingReason
             }
             count
           }
@@ -34,32 +34,32 @@ class TransactionService {
 
   public createTransaction(
     amount: number,
-    purpose: string,
+    spendingReason: string,
     date: Date
   ): Promise<{ transaction: Transaction }> {
     return this.graphQLClient.request(
       gql`
         mutation createTransactionInput(
           $amount: Float!
-          $purpose: String!
+          $spendingReason: String!
           $date: DateTime!
         ) {
           createTransaction(
             createTransactionInput: {
               amount: $amount
-              purpose: $purpose
+              spendingReason: $spendingReason
               date: $date
             }
           ) {
             amount
-            purpose
+            spendingReason
             date
           }
         }
       `,
       {
         amount: Number(amount),
-        purpose,
+        spendingReason,
         date,
       }
     );

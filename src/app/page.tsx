@@ -24,12 +24,12 @@ export default function Home() {
   const formik = useFormik({
     initialValues: {
       amount: 0,
-      purpose: "test",
+      spendingReason: "test",
       date: new Date(),
     },
     validationSchema,
-    onSubmit: async ({ amount, purpose, date }) => {
-      await transactionService.createTransaction(amount, purpose, date);
+    onSubmit: async ({ amount, spendingReason, date }) => {
+      await transactionService.createTransaction(amount, spendingReason, date);
       getTransactions();
     },
   });
@@ -55,7 +55,7 @@ export default function Home() {
   const columns = [
     { label: "#", value: "" },
     { label: "Số tiền", value: "amount" },
-    { label: "Lý do chi tiêu", value: "purpose" },
+    { label: "Lý do chi tiêu", value: "spendingReason" },
     { label: "Ngày chi", value: "date" },
   ];
 
@@ -79,10 +79,10 @@ export default function Home() {
           </div>
           <div className="mb-3 w-100">
             <FormSelect
-              id="purpose"
-              name="purpose"
+              id="spendingReason"
+              name="spendingReason"
               label="Lý do chi tiêu"
-              value={formik.values.purpose}
+              value={formik.values.spendingReason}
               handleChange={formik.handleChange}
               options={[{ label: "test", value: "test" }]}
             />
