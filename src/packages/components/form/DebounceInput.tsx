@@ -1,40 +1,42 @@
 "use client";
 
 import {
+  ChangeEvent,
   FC,
   HTMLInputTypeAttribute,
-  SetStateAction,
   useEffect,
   useState,
 } from "react";
 
 interface Props {
-  id?: string;
-  defaultValue?: string;
-  onChange: (value: any) => void;
+  id: string;
+  value?: string;
+  name: string;
+  handleChange: (e: ChangeEvent<any>) => void;
   positiveNumber?: boolean;
   min?: number;
-  type?: HTMLInputTypeAttribute | undefined;
+  type: HTMLInputTypeAttribute | undefined;
+  error?: string;
 }
 export const DebounceInput: FC<Props> = ({
   id,
   type,
+  name,
   positiveNumber,
   min,
-  defaultValue,
-  onChange,
+  value,
+  handleChange,
+  error,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<ChangeEvent<any> | any>();
 
-  const handleInputChange = (event: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setInputValue(event.target.value);
+  const handleInputChange = (event: ChangeEvent<any>) => {
+    setInputValue(event);
   };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      onChange(inputValue);
+      handleChange(inputValue);
     }, 500);
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,24 +44,31 @@ export const DebounceInput: FC<Props> = ({
 
   if (type === "number" && (positiveNumber || min)) {
     return (
-      <input
-        type={type}
-        className="form-control"
-        id={id}
-        min={min || 0}
-        defaultValue={defaultValue}
-        onChange={handleInputChange}
-      />
+      <>
+        <input
+          type={type}
+          className="form-control"
+          id={id}
+          min={min || 0}
+          value={value}
+          onChange={handleInputChange}
+        />
+        {error && <div className="form-text text-danger">{error}</div>}
+      </>
     );
   }
 
   return (
-    <input
-      type={type}
-      className="form-control"
-      id={id}
-      defaultValue={defaultValue}
-      onChange={handleInputChange}
-    />
+    <>
+      <input
+        id={id}
+        name={name}
+        type={type}
+        className="form-control"
+        value={value}
+        onChange={handleInputChange}
+      />
+      {error && <div className="form-text text-danger">{error}</div>}
+    </>
   );
 };

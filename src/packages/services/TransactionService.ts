@@ -19,6 +19,7 @@ class TransactionService {
         query dto($take: Int!, $skip: Int!, $sort: String!) {
           transaction(dto: { take: $take, skip: $skip, sort: $sort }) {
             result {
+              id
               amount
               date
               purpose
@@ -61,6 +62,18 @@ class TransactionService {
         purpose,
         date,
       }
+    );
+  }
+
+  public deleteTransaction(id: string): Promise<{ success: boolean }> {
+    return this.graphQLClient.request(
+      gql`
+        mutation {
+          removeTransaction(id: "${id}") {
+            success
+          }
+        }
+      `
     );
   }
 }
